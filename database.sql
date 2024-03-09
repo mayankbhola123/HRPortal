@@ -4,7 +4,7 @@ CREATE TABLE Candidates (
   name VARCHAR(255) NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL, -- Ensure unique email addresses
   phone VARCHAR(20),
-  current_status VARCHAR(255) CHECK (current_status IN ('Contacted', 'Interview Scheduled', 'Offer Extended', 'Hired', 'Rejected')),
+  current_status VARCHAR(25) CHECK (current_status IN ('Contacted', 'Interview Scheduled', 'Offer Extended', 'Hired', 'Rejected')),
   expected_salary DECIMAL(10,2)
 );
 
@@ -32,19 +32,3 @@ CREATE TABLE Experience (
   start_date DATE,
   end_date DATE
 );
-
-CREATE VIEW Candidate_Scores AS
-SELECT 
-  c.candidate_id,
-  c.name,
-  c.email,
-  c.phone,
-  c.current_status,
-  c.expected_salary,
-  CASE WHEN e.skill_name = 'Node.js' THEN e.years_of_experience ELSE 0 END AS node_js_experience,
-  CASE WHEN e.skill_name = 'ReactJS' THEN e.years_of_experience ELSE 0 END AS react_js_experience,
-  (CASE WHEN e.skill_name = 'Node.js' THEN e.years_of_experience ELSE 0 END) + 
-  (CASE WHEN e.skill_name = 'ReactJS' THEN e.years_of_experience ELSE 0 END) AS total_score
-FROM Candidates c
-LEFT JOIN Experience e ON c.candidate_id = e.candidate_id;
-
